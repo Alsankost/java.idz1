@@ -1,0 +1,9 @@
+.function_element {
+	
+}
+
+.border_test
+{
+	-fx-border-width: 2px;
+	-fx-border-style: solid;
+}
