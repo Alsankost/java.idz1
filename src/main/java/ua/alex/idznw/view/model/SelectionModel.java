@@ -15,6 +15,18 @@ public class SelectionModel {
 	public SpaceModel getSpaceModel() {
 		return spaceModel;
 	}
+	
+	public void add(Component component) {
+		selectionList.add(component);
+	}
+	
+	public void remove(Component component) {
+		selectionList.remove(component);
+	}
+	
+	public void clear() {
+		selectionList.clear();
+	}
 
 	public SelectionModel(SpaceModel spaceModel) {
 		this.spaceModel = spaceModel;
