@@ -7,15 +7,19 @@
 </ul>
 
 <h3> Build:</h3>
-you can use maven for build
+you can use <b>maven</b> for build
 
 <h3> Import to IDE:</h3>
-<b>Eclipse:</b>
- 1. Create new java project
- 2. Set workspace for project in this directory
- 3. Finish
+<b>Eclipse:</b><br>
+<ol>
+	<li>Create new java project</li>
+	<li>Set workspace for project in this directory</li>
+	<li>Finish</li>
+</ol>
 
-#OR
- 
- 1. Install plugin for maven from Eclipse Marketplace
- 2. Import as maven project
+<b>OR</b><br>
+
+<ol>
+	<li>Install plugin for maven from Eclipse Marketplace</li>
+	<li>Import as maven project</li>
+</ol>
