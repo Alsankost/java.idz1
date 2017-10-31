@@ -7,3 +7,10 @@
 	-fx-border-width: 2px;
 	-fx-border-style: solid;
 }
+
+.selection_component {
+	-fx-border-width: 2px;
+	-fx-border-style: solid;
+	-fx-border-color: #00FF00;
+	-fx-fill: #00F000;
+}
