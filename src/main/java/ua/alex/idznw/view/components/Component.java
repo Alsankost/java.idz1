@@ -1,10 +1,10 @@
 package ua.alex.idznw.view.components;
 
 import javafx.event.EventHandler;
-import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Rectangle;
+import ua.alex.idznw.view.model.SelectionModel;
 
 public abstract class Component extends Pane {
 	public static final double DEFAULT_WIDTH  = 100,
@@ -17,18 +17,68 @@ public abstract class Component extends Pane {
 							   
 	public static final String SELECTION_STYPE = "selection_component"; 
 	
+	private double startMoveX = 0, startMoveY = 0;
+	
 	private static final EventHandler<MouseEvent> resizeBlockDragListener = (e) -> {
 		Component block = (Component) ((Rectangle) e.getSource()).getParent();
+		
+		SelectionModel selectionModel = ( (Space) block.getParent() ).getSelectionModel();
+		selectionModel.clear();
+		selectionModel.add(block);
 		
 		double dx = e.getX();
 		double dy = e.getY();
 		
-		//System.out.println(block);
-		
-		//dx = (dx < MIN_WIDTH )? MIN_WIDTH:dx;
-		//dy = (dy < MIN_HEIGHT)?MIN_HEIGHT:dy;
-		
 		block.setSize(dx, dy);
+	};
+	
+	private static final EventHandler<MouseEvent> thisEnteredListener = (e) -> {
+		Component block = (Component) e.getSource();
+		if (block != null) {
+			( (Space) block.getParent() ).setComponentFocus(true);
+		}
+	};
+	
+	private static final EventHandler<MouseEvent> thisExitedListener = (e) -> {
+		Component block = (Component) e.getSource();
+		if (block != null) {
+			( (Space) block.getParent() ).setComponentFocus(false);
+		}
+	};
+	
+	private static final EventHandler<MouseEvent> thisClickListener = (e) -> {
+		Component block = (Component) e.getSource();
+		if (block != null &&
+			Math.abs(block.startMoveX - e.getX()) < 1 &&
+			Math.abs(block.startMoveY - e.getY()) < 1) {
+			SelectionModel selectionModel = ( (Space) block.getParent() ).getSelectionModel();
+			selectionModel.clear();
+			selectionModel.add(block);
+		}
+	};
+	
+	private static final EventHandler<MouseEvent> thisPressListener = (e) -> {
+		Component block = (Component) e.getSource();
+		block.startMoveX = e.getX();
+		block.startMoveY = e.getY();
+	};
+	
+	private static final EventHandler<MouseEvent> thisDragListener = (e) -> {
+		Component block = (Component) e.getSource();
+		
+		if (e.getX() > Component.RESIZE_BLOCK_WIDTH &&
+			e.getX() < block.getPrefWidth() - Component.RESIZE_BLOCK_WIDTH &&
+			e.getY() > Component.RESIZE_BLOCK_HEIGHT &&
+			e.getY() < block.getPrefHeight() - Component.RESIZE_BLOCK_HEIGHT) {
+			SelectionModel selectionModel = ( (Space) block.getParent() ).getSelectionModel();
+			if (block.isSelected()) {
+				selectionModel.moveComponents(block.startMoveX, block.startMoveY, e.getX(), e.getY());
+			}
+			else {
+				selectionModel.clear();
+				selectionModel.add(block);
+			}
+		}
 	};
 	
 	public Component(double x, double y) {
@@ -49,6 +99,11 @@ public abstract class Component extends Pane {
 		resizeBlock.setHeight(RESIZE_BLOCK_HEIGHT);
 		
 		this.getChildren().add(resizeBlock);
+		this.setOnMouseEntered(thisEnteredListener);
+		this.setOnMouseExited(thisExitedListener);
+		this.setOnMouseClicked(thisClickListener);
+		this.setOnMousePressed(thisPressListener);
+		this.setOnMouseDragged(thisDragListener);
 		
 		resizeBlock.setOnMouseDragged(resizeBlockDragListener);
 	}
@@ -65,13 +120,15 @@ public abstract class Component extends Pane {
 	
 	public void selectionOn() {
 		this.getStyleClass().add(SELECTION_STYPE);
-		System.out.println("a");
 		this.applyCss();
 	}
 	
 	public void selectionOff() {
 		this.getStyleClass().remove(SELECTION_STYPE);
-		System.out.println("b");
 		this.applyCss();
+	}
+	
+	public boolean isSelected() {
+		return ( (Space) this.getParent() ).getSelectionModel().isSelected(this);
 	}
 }
