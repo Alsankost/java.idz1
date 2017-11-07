@@ -7,20 +7,15 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
-import ua.alex.idznw.view.components.Component;
-import ua.alex.idznw.view.components.NetworkComponent;
-import ua.alex.idznw.view.components.Space;
+import ua.alex.idznw.view.content.NetworkComponent;
 
 public class MainController implements Initializable {
-
-	Component c1 = new NetworkComponent(200, 200);
 	
 	@FXML
 	private TabPane content; 
 	
 	@FXML
 	private void test() {
-		c1.setPrefWidth(200);
 	}
 	
 	@Override
@@ -29,8 +24,7 @@ public class MainController implements Initializable {
 		Tab tab = new Tab("Test");
 		Space s = new Space();
 		
-		Component c2 = new NetworkComponent(400, 400);
-		s.addComponent(c1);
+		ComponentView c2 = new ComponentView(200, 200, new NetworkComponent());
 		s.addComponent(c2);
 		/*
 		AnchorPane ap = new AnchorPane();

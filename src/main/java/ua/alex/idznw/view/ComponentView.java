@@ -1,12 +1,13 @@
-package ua.alex.idznw.view.components;
+package ua.alex.idznw.view;
 
 import javafx.event.EventHandler;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Rectangle;
+import ua.alex.idznw.view.model.ComponentContent;
 import ua.alex.idznw.view.model.SelectionModel;
 
-public abstract class Component extends Pane {
+public class ComponentView extends Pane {
 	public static final double DEFAULT_WIDTH  = 100,
 							   DEFAULT_HEIGHT = 100,
 							   MIN_WIDTH      = 60,
@@ -20,7 +21,7 @@ public abstract class Component extends Pane {
 	private double startMoveX = 0, startMoveY = 0;
 	
 	private static final EventHandler<MouseEvent> resizeBlockDragListener = (e) -> {
-		Component block = (Component) ((Rectangle) e.getSource()).getParent();
+		ComponentView block = (ComponentView) ((Rectangle) e.getSource()).getParent();
 		
 		SelectionModel selectionModel = ( (Space) block.getParent() ).getSelectionModel();
 		selectionModel.clear();
@@ -33,21 +34,21 @@ public abstract class Component extends Pane {
 	};
 	
 	private static final EventHandler<MouseEvent> thisEnteredListener = (e) -> {
-		Component block = (Component) e.getSource();
+		ComponentView block = (ComponentView) e.getSource();
 		if (block != null) {
 			( (Space) block.getParent() ).setComponentFocus(true);
 		}
 	};
 	
 	private static final EventHandler<MouseEvent> thisExitedListener = (e) -> {
-		Component block = (Component) e.getSource();
+		ComponentView block = (ComponentView) e.getSource();
 		if (block != null) {
 			( (Space) block.getParent() ).setComponentFocus(false);
 		}
 	};
 	
 	private static final EventHandler<MouseEvent> thisClickListener = (e) -> {
-		Component block = (Component) e.getSource();
+		ComponentView block = (ComponentView) e.getSource();
 		if (block != null &&
 			Math.abs(block.startMoveX - e.getX()) < 1 &&
 			Math.abs(block.startMoveY - e.getY()) < 1) {
@@ -58,18 +59,18 @@ public abstract class Component extends Pane {
 	};
 	
 	private static final EventHandler<MouseEvent> thisPressListener = (e) -> {
-		Component block = (Component) e.getSource();
+		ComponentView block = (ComponentView) e.getSource();
 		block.startMoveX = e.getX();
 		block.startMoveY = e.getY();
 	};
 	
 	private static final EventHandler<MouseEvent> thisDragListener = (e) -> {
-		Component block = (Component) e.getSource();
+		ComponentView block = (ComponentView) e.getSource();
 		
-		if (e.getX() > Component.RESIZE_BLOCK_WIDTH &&
-			e.getX() < block.getPrefWidth() - Component.RESIZE_BLOCK_WIDTH &&
-			e.getY() > Component.RESIZE_BLOCK_HEIGHT &&
-			e.getY() < block.getPrefHeight() - Component.RESIZE_BLOCK_HEIGHT) {
+		if (e.getX() > ComponentView.RESIZE_BLOCK_WIDTH &&
+			e.getX() < block.getPrefWidth() - ComponentView.RESIZE_BLOCK_WIDTH &&
+			e.getY() > ComponentView.RESIZE_BLOCK_HEIGHT &&
+			e.getY() < block.getPrefHeight() - ComponentView.RESIZE_BLOCK_HEIGHT) {
 			SelectionModel selectionModel = ( (Space) block.getParent() ).getSelectionModel();
 			if (block.isSelected()) {
 				selectionModel.moveComponents(block.startMoveX, block.startMoveY, e.getX(), e.getY());
@@ -81,17 +82,22 @@ public abstract class Component extends Pane {
 		}
 	};
 	
-	public Component(double x, double y) {
+	public ComponentView(double x, double y, ComponentContent content) {
 		this.setLayoutX(x);
 		this.setLayoutY(y);
-		this.setMinWidth(MIN_WIDTH);
-		this.setMinHeight(MIN_HEIGHT);
 		this.setPrefWidth(DEFAULT_WIDTH);
 		this.setPrefHeight(DEFAULT_HEIGHT);
-		
-		//this.getStyleClass().add("border_test");
 				
 		Rectangle resizeBlock = new Rectangle();
+		
+		content.setLayoutX(RESIZE_BLOCK_WIDTH);
+		content.setLayoutY(RESIZE_BLOCK_HEIGHT);
+		content.prefWidthProperty().bind(prefWidthProperty().subtract(RESIZE_BLOCK_WIDTH * 2));
+		content.prefHeightProperty().bind(prefHeightProperty().subtract(RESIZE_BLOCK_HEIGHT * 2));
+		this.getChildren().add(content);
+		
+		this.minWidthProperty().bind(content.minWidthProperty().add(RESIZE_BLOCK_WIDTH * 2));
+		this.minHeightProperty().bind(content.minHeightProperty().add(RESIZE_BLOCK_HEIGHT * 2));
 		
 		resizeBlock.xProperty().bind(this.widthProperty().subtract(RESIZE_BLOCK_WIDTH));
 		resizeBlock.yProperty().bind(this.heightProperty().subtract(RESIZE_BLOCK_HEIGHT));

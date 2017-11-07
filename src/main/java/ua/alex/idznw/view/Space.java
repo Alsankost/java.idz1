@@ -1,4 +1,4 @@
-package ua.alex.idznw.view.components;
+package ua.alex.idznw.view;
 
 import javafx.collections.ListChangeListener;
 import javafx.event.EventHandler;
@@ -39,7 +39,7 @@ public class Space extends Pane {
 		return selectionModel;
 	}
 	
-	public void addComponent(Component c) {
+	public void addComponent(ComponentView c) {
 		this.getChildren().add(c);
 	}
 	
@@ -58,8 +58,8 @@ public class Space extends Pane {
 				while (change.next()) {
 					if (change.wasRemoved()) {
 						for (Object item : change.getRemoved()) {
-							if (!(item instanceof Component)) continue;
-							selectionModel.remove((Component) item);
+							if (!(item instanceof ComponentView)) continue;
+							selectionModel.remove((ComponentView) item);
 						}
 					}
 				}

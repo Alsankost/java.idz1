@@ -8,14 +8,14 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.shape.Rectangle;
-import ua.alex.idznw.view.components.Component;
-import ua.alex.idznw.view.components.Space;
+import ua.alex.idznw.view.ComponentView;
+import ua.alex.idznw.view.Space;
 
 public class SelectionModel {
 	
 	private Space space;
 	
-	private ObservableList<Component> selectionList;
+	private ObservableList<ComponentView> selectionList;
 	
 	private DoubleProperty startSelectionX = new SimpleDoubleProperty(),
 			   			   startSelectionY = new SimpleDoubleProperty(),
@@ -32,27 +32,27 @@ public class SelectionModel {
 		return space;
 	}
 	
-	public void add(Component component) {
+	public void add(ComponentView component) {
 		if (selectionList.contains(component)) return;
 		selectionList.add(component);
 		component.selectionOn();
 	}
 	
-	public void remove(Component component) {
+	public void remove(ComponentView component) {
 		if (!selectionList.contains(component)) return;
 		selectionList.remove(component);
 		component.selectionOff();
 	}
 	
 	public void clear() {
-		for (Component item : selectionList) {
+		for (ComponentView item : selectionList) {
 			item.selectionOff();
 		}
 		selectionList.clear();
 	}
 	
 	public void moveComponents(double sx, double sy, double x, double y) {
-		for (Component item : selectionList) {
+		for (ComponentView item : selectionList) {
 			item.setLayoutX(item.getLayoutX() - sx + x);
 			item.setLayoutY(item.getLayoutY() - sy + y);
 		}
@@ -94,8 +94,8 @@ public class SelectionModel {
 		endSelectionY.set(y2);
 		
 		for (Node item : space.getChildren()) {
-			if (item instanceof Component) {
-				Component component = (Component) item;
+			if (item instanceof ComponentView) {
+				ComponentView component = (ComponentView) item;
 				boolean selectFlag = false;
 				for (int a = 0; a < 2 && !selectFlag; a++) {
 					for (int b = 0; b < 2 && !selectFlag; b++) {
@@ -120,7 +120,7 @@ public class SelectionModel {
 		visibleSelectionFlag.set(false);
 	}
 	
-	public boolean isSelected(Component component) {
+	public boolean isSelected(ComponentView component) {
 		return selectionList.contains(component);
 	}
 
