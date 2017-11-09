@@ -5,17 +5,26 @@ import java.util.ResourceBundle;
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
+import javafx.scene.layout.VBox;
 import ua.alex.idznw.view.content.NetworkComponent;
 
 public class MainController implements Initializable {
 	
 	@FXML
-	private TabPane content; 
+	private TabPane content;
+	
+	@FXML
+	private VBox componentSet;
 	
 	@FXML
 	private void test() {
+	}
+	
+	public void addToComponentSet(Node node) {
+		componentSet.getChildren().add(node);
 	}
 	
 	@Override

@@ -6,12 +6,13 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import ua.alex.idznw.view.MainController;
+import ua.alex.idznw.view.model.ComponentsSet;
 
 public class Start extends Application {
 
 	private static MainController mainController;
 	
-	public MainController getMainContoller() {
+	public static MainController getMainContoller() {
 		return mainController;
 	}
 	
@@ -27,6 +28,8 @@ public class Start extends Application {
 		
 		Scene scene = new Scene(root, 1000, 900);
 		scene.getStylesheets().add(getClass().getResource("view/css/style.css").toExternalForm());
+		
+		ComponentsSet.init();
 		
 		primaryStage.setScene(scene);
 		primaryStage.show();
