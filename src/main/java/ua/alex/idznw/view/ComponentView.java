@@ -67,6 +67,7 @@ public class ComponentView extends Pane {
 	private static final EventHandler<MouseEvent> thisDragListener = (e) -> {
 		ComponentView block = (ComponentView) e.getSource();
 		
+		
 		if (e.getX() > ComponentView.RESIZE_BLOCK_WIDTH &&
 			e.getX() < block.getPrefWidth() - ComponentView.RESIZE_BLOCK_WIDTH &&
 			e.getY() > ComponentView.RESIZE_BLOCK_HEIGHT &&
@@ -85,8 +86,8 @@ public class ComponentView extends Pane {
 	public ComponentView(double x, double y, ComponentContent content) {
 		this.setLayoutX(x);
 		this.setLayoutY(y);
-		this.setPrefWidth(DEFAULT_WIDTH);
-		this.setPrefHeight(DEFAULT_HEIGHT);
+		this.setPrefWidth(content.getPrefWidth());
+		this.setPrefHeight(content.getPrefHeight());
 				
 		Rectangle resizeBlock = new Rectangle();
 		

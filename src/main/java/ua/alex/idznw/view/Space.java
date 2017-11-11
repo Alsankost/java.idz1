@@ -3,14 +3,47 @@ package ua.alex.idznw.view;
 import javafx.collections.ListChangeListener;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
+import javafx.scene.input.DragEvent;
+import javafx.scene.input.Dragboard;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.input.TransferMode;
 import javafx.scene.layout.Pane;
+import ua.alex.idznw.view.model.ComponentContent;
+import ua.alex.idznw.view.model.ComponentsSet;
 import ua.alex.idznw.view.model.SelectionModel;
 
 public class Space extends Pane {
 	private SelectionModel selectionModel;
 	
 	private boolean componentFocusFlag = false;
+
+	private static final EventHandler<DragEvent> dragOver = (e) -> {
+		e.acceptTransferModes(TransferMode.ANY);
+        /*DropShadow dropShadow = new DropShadow();
+        dropShadow.setRadius(5.0);
+        dropShadow.setOffsetX(3.0);
+        dropShadow.setOffsetY(3.0);
+        dropShadow.setColor(Color.color(0.4, 0.5, 0.5));
+        myTestButton.setEffect(dropShadow);*/
+	};	
+	
+	private static final EventHandler<DragEvent> dragExited = (e) -> {
+		e.acceptTransferModes(TransferMode.ANY);
+        //myTestButton.setEffect(null);
+        e.consume();
+	};	
+	
+	private static final EventHandler<DragEvent> dragDrop = (e) -> {
+		Space space = (Space) e.getSource();
+		//added = bp.getCenter().getClass();
+		Dragboard db = ((DragEvent) e).getDragboard();
+		String name = db.getString();
+		
+		ComponentContent content = ComponentsSet.createContent(name);
+		if (content == null) return;
+		ComponentView temp = new ComponentView(e.getX() - content.getPrefWidth() / 2, e.getY() - content.getPrefHeight() / 2, content);
+		space.getChildren().add(temp);
+	};	
 	
 	public void setComponentFocus(boolean flag) {
 		componentFocusFlag = flag;
@@ -46,6 +79,9 @@ public class Space extends Pane {
 	public Space() {
 		super();
 		
+		this.setOnDragOver(dragOver);
+		this.setOnDragEntered(dragExited);
+		this.setOnDragDropped(dragDrop);
 		selectionModel = new SelectionModel(this);
 		
 		this.setOnMousePressed(thisPressListener);

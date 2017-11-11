@@ -6,8 +6,14 @@ import ua.alex.idznw.view.model.ComponentContent;
 
 public class NetworkComponent extends ComponentContent {
 
+	private static final double DEFAULT_WIDTH  = 100;
+	private static final double DEFAULT_HEIGHT = 80;
+	
 	public NetworkComponent() {
 		super();
+		
+		this.setPrefWidth(DEFAULT_WIDTH);
+		this.setPrefHeight(DEFAULT_HEIGHT);
 		
 		Ellipse ellipse = new Ellipse();
 		ellipse.centerXProperty().bind(this.widthProperty().divide(2));

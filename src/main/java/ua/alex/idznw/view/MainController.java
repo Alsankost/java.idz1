@@ -27,6 +27,10 @@ public class MainController implements Initializable {
 		componentSet.getChildren().add(node);
 	}
 	
+	public Space getCurrentSpace() {
+		return (Space) content.getSelectionModel().getSelectedItem().getContent();
+	}
+	
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		System.out.println("asd");
