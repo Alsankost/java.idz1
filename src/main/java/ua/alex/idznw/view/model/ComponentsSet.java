@@ -13,7 +13,6 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import ua.alex.idznw.Start;
 import ua.alex.idznw.view.content.NetworkComponent;
-import ua.alex.idznw.view.content.TableComponent;
 
 public abstract class ComponentsSet {
 	
@@ -26,7 +25,6 @@ public abstract class ComponentsSet {
 	
 	static {
 		collection.put("Network", NetworkComponent.class);
-		collection.put("Table", TableComponent.class);
 	};
 	
 	//private static Class<?> added = null;
