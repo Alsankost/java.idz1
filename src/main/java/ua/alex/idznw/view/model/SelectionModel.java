@@ -8,6 +8,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.shape.Rectangle;
+import ua.alex.idznw.Start;
 import ua.alex.idznw.view.ComponentView;
 import ua.alex.idznw.view.Space;
 
@@ -32,6 +33,14 @@ public class SelectionModel {
 		return space;
 	}
 	
+	public void selectOne(ComponentView component) {
+		/*for (ComponentView item : selectionList) {
+			if (!item.equals(component)) item.selectionOff();
+		}*/
+		clear();
+		add(component);
+	}
+	
 	public void add(ComponentView component) {
 		if (selectionList.contains(component)) return;
 		selectionList.add(component);
@@ -52,6 +61,7 @@ public class SelectionModel {
 	}
 	
 	public void moveComponents(double sx, double sy, double x, double y) {
+		if (Start.getMainContoller().getCurrentTool() != Tool.EDIT) return;
 		for (ComponentView item : selectionList) {
 			item.setLayoutX(item.getLayoutX() - sx + x);
 			item.setLayoutY(item.getLayoutY() - sy + y);
@@ -59,7 +69,7 @@ public class SelectionModel {
 	}
 	
 	public void beginSelection(double x, double y) {
-		if (space.isComponentFocus()) return;
+		if (space.isComponentFocus() || Start.getMainContoller().getCurrentTool() != Tool.EDIT) return;
 		
 		firstX = x;
 		firstY = y;
@@ -124,6 +134,10 @@ public class SelectionModel {
 		return selectionList.contains(component);
 	}
 
+	public ComponentView getOne() {
+		return selectionList.get(0);
+	}
+	
 	public SelectionModel(Space space) {
 		this.space = space;
 		

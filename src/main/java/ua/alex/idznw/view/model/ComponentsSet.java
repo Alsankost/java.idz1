@@ -12,7 +12,9 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import ua.alex.idznw.Start;
+import ua.alex.idznw.view.ComponentContent;
 import ua.alex.idznw.view.content.NetworkComponent;
+import ua.alex.idznw.view.content.RouterComponent;
 
 public abstract class ComponentsSet {
 	
@@ -25,9 +27,14 @@ public abstract class ComponentsSet {
 	
 	static {
 		collection.put("Network", NetworkComponent.class);
+		collection.put( "Router", RouterComponent.class);
 	};
 	
 	//private static Class<?> added = null;
+	
+	public static boolean isContains(String key) {
+		return collection.keySet().contains(key);
+	}
 	
 	public static ComponentContent createContent(String name) {
 		ComponentContent result = null;
@@ -65,7 +72,7 @@ public abstract class ComponentsSet {
         /* put a string on dragboard */
         ClipboardContent content = new ClipboardContent();
         
-        content.putString( ((Text) item.getBottom()).getText());
+        content.putString("+" + ((Text) item.getTop()).getText());
         db.setContent(content);
 
         e.consume();
@@ -83,7 +90,7 @@ public abstract class ComponentsSet {
 		Text text = new Text(name);
 		text.setWrappingWidth(WIDTH);
 		text.setTextAlignment(TextAlignment.CENTER);
-		container.setBottom(text);
+		container.setTop(text);
 		
 		container.setOnDragDetected(elementDrag);
 		//container.setOnMouseReleased(elementDrop);

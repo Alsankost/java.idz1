@@ -8,7 +8,6 @@ import javafx.scene.input.Dragboard;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.Pane;
-import ua.alex.idznw.view.model.ComponentContent;
 import ua.alex.idznw.view.model.ComponentsSet;
 import ua.alex.idznw.view.model.SelectionModel;
 
@@ -18,6 +17,11 @@ public class Space extends Pane {
 	private boolean componentFocusFlag = false;
 
 	private static final EventHandler<DragEvent> dragOver = (e) -> {
+		Dragboard db = ((DragEvent) e).getDragboard();
+		String name = db.getString();
+		if (name.length() == 0) return;
+		if (name.substring(0, 1).compareTo("+") != 0 ||
+			!ComponentsSet.isContains(name.substring(1, name.length()))) return;
 		e.acceptTransferModes(TransferMode.ANY);
         /*DropShadow dropShadow = new DropShadow();
         dropShadow.setRadius(5.0);
@@ -28,6 +32,11 @@ public class Space extends Pane {
 	};	
 	
 	private static final EventHandler<DragEvent> dragExited = (e) -> {
+		Dragboard db = ((DragEvent) e).getDragboard();
+		String name = db.getString();
+		if (name.length() == 0) return;
+		if (name.substring(0, 1).compareTo("+") != 0 ||
+			!ComponentsSet.isContains(name.substring(1, name.length()))) return;
 		e.acceptTransferModes(TransferMode.ANY);
         //myTestButton.setEffect(null);
         e.consume();
@@ -39,7 +48,11 @@ public class Space extends Pane {
 		Dragboard db = ((DragEvent) e).getDragboard();
 		String name = db.getString();
 		
-		ComponentContent content = ComponentsSet.createContent(name);
+		if (name.length() == 0) return;
+		if (name.substring(0, 1).compareTo("+") != 0 ||
+			!ComponentsSet.isContains(name.substring(1, name.length()))) return;
+		
+		ComponentContent content = ComponentsSet.createContent(name.substring(1, name.length()));
 		if (content == null) return;
 		ComponentView temp = new ComponentView(e.getX() - content.getPrefWidth() / 2, e.getY() - content.getPrefHeight() / 2, content);
 		space.getChildren().add(temp);
@@ -68,6 +81,12 @@ public class Space extends Pane {
 		tmp.selectionModel.endSelection();
 	};
 	
+	private static final EventHandler<MouseEvent> thisClickListener = (e) -> {
+		if (e.isDragDetect()) return;
+		Space tmp = (Space) e.getSource();
+		tmp.selectionModel.clear();
+	};
+	
 	public SelectionModel getSelectionModel() {
 		return selectionModel;
 	}
@@ -87,6 +106,7 @@ public class Space extends Pane {
 		this.setOnMousePressed(thisPressListener);
 		this.setOnMouseDragged(thisDragListener);
 		this.setOnMouseReleased(thisReleaseListener);
+		this.setOnMouseClicked(thisClickListener);
 		
 		this.getChildren().addListener(new ListChangeListener<Node>() {
 			@Override
