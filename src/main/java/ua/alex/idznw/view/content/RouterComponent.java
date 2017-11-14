@@ -98,4 +98,16 @@ public class RouterComponent extends ComponentContent {
 	public void update(UpdateType updateType, Object... data) {
 		// TODO Auto-generated method stub
 	}
+
+	@Override
+	public void setData(String... data) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public String[] getData() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

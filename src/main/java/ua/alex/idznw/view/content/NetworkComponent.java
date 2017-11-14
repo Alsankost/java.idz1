@@ -90,4 +90,18 @@ public class NetworkComponent extends ComponentContent {
 			}
 		}
 	}
+
+	@Override
+	public void setData(String... data) {
+		// TODO Auto-generated method stub
+		if (data.length == 0) return;
+		ipText.setText(data[0]);
+	}
+
+	@Override
+	public String[] getData() {
+		String[] tmp = new String[1];
+		tmp[0] = ipText.getText();
+		return tmp;
+	}
 }

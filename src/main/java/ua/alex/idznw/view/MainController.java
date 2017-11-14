@@ -1,9 +1,12 @@
 package ua.alex.idznw.view;
 
+import java.io.File;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
+
+import javax.xml.bind.JAXBException;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -11,9 +14,15 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
+import javafx.stage.FileChooser;
+import javafx.stage.FileChooser.ExtensionFilter;
+import ua.alex.idznw.Start;
+import ua.alex.idznw.model.xml.XmlDataManager;
 import ua.alex.idznw.view.model.Tool;
 
 public class MainController implements Initializable {
@@ -23,6 +32,9 @@ public class MainController implements Initializable {
 	
 	@FXML
 	private VBox componentSet;
+	
+	@FXML
+	private BorderPane root;
 	
 	//==Tools:
 	@FXML
@@ -49,16 +61,85 @@ public class MainController implements Initializable {
 	private void test() {
 	}
 	
+	//==Choosers
+	private FileChooser fileChooser = new FileChooser();
+	
+	//==Action listeners
+	public void menuAction_New() {
+		ScrollPane sp = new ScrollPane();
+		sp.setContent(new Space());
+		
+		sp.setOnDragOver(Space.dragOver);
+		sp.setOnDragEntered(Space.dragExited);
+		sp.setOnDragDropped(Space.dragDrop);
+		
+		Tab tab = new Tab("new");
+		tab.setClosable(true);
+		
+		tab.setContent(sp);
+		content.getTabs().add(tab);
+	}
+	
+	public void menuAction_Save() {
+		fileChooser.setTitle("Save space");
+		
+		File file = fileChooser.showSaveDialog(Start.getPrimaryStage());
+		if (file == null) {
+			return;
+		}
+		
+		try {
+			XmlDataManager.save(getCurrentSpace(), file);
+			this.getCurrentTab().setText(file.getName());
+		} catch (JAXBException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	public void menuAction_Open() {
+		fileChooser.setTitle("Open space");
+		
+		File file = fileChooser.showOpenDialog(Start.getPrimaryStage());
+		if (file == null) {
+			return;
+		}
+		
+		try {
+			Space space = XmlDataManager.load(file);
+			ScrollPane sp = new ScrollPane();
+			sp.setContent(space);
+			
+			sp.setOnDragOver(Space.dragOver);
+			sp.setOnDragEntered(Space.dragExited);
+			sp.setOnDragDropped(Space.dragDrop);
+			
+			Tab tab = new Tab(file.getName());
+			tab.setClosable(true);
+			
+			tab.setContent(sp);
+			content.getTabs().add(tab);
+		} catch (JAXBException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	//==System
+	public Tab getCurrentTab() {
+		return content.getSelectionModel().getSelectedItem();
+	}
+	
+	public Space getCurrentSpace() {
+		return (Space) ( (ScrollPane) getCurrentTab().getContent() ).getContent();
+	}
+	
 	public void addToComponentSet(Node node) {
 		componentSet.getChildren().add(node);
 	}
 	
-	public Space getCurrentSpace() {
-		return (Space) content.getSelectionModel().getSelectedItem().getContent();
-	}
-	
 	private EventHandler<ActionEvent> toolAction = (e) -> {
-		((Space) content.getSelectionModel().getSelectedItem().getContent()).getSelectionModel().clear();
+		((Space) ((ScrollPane) content.getSelectionModel().getSelectedItem().getContent()).getContent()).getSelectionModel().clear();
 		for (Button item : toolButtons.values()) {
 			if (item.equals(e.getSource())) {
 				item.setDisable(true);
@@ -80,10 +161,14 @@ public class MainController implements Initializable {
 			item.setOnAction(toolAction);
 		}
 		
+		content.setTabClosingPolicy(TabPane.TabClosingPolicy.ALL_TABS);
+		
+		fileChooser.getExtensionFilters().add(new ExtensionFilter("XML files", "*.xml"));
+		/*
 		//System.out.println("asd");
 		Tab tab = new Tab("Test");
-		Space s = new Space();
-		
+		s = new Space();
+		*/
 		//ComponentView c2 = new ComponentView(200, 200, new NetworkComponent(true));
 		//s.addComponent(c2);
 		/*
@@ -91,10 +176,10 @@ public class MainController implements Initializable {
 		ap.getStyleClass().add("border_test");
 		ap.setMinHeight(100);
 		ap.setMinWidth(100);
-		s.getChildren().add(ap);*/
+		s.getChildren().add(ap);
 		tab.setContent(s);
 		//tab.getTabPane().getTabs().add(tab);
-		content.getTabs().add(tab);
+		content.getTabs().add(tab);*/
 		
 		//c1.setMinWidth(200);
 	}

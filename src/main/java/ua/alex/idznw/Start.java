@@ -11,6 +11,11 @@ import ua.alex.idznw.view.model.ComponentsSet;
 public class Start extends Application {
 
 	private static MainController mainController;
+	private static Stage primaryStage;
+	
+	public static Stage getPrimaryStage() {
+		return Start.primaryStage;
+	}
 	
 	public static MainController getMainContoller() {
 		return mainController;
@@ -22,6 +27,8 @@ public class Start extends Application {
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
+		Start.primaryStage = primaryStage;
+		
 		FXMLLoader loader = new FXMLLoader(Start.class.getResource("view/fxml/MainForm.fxml"));
 		Parent root = loader.load();
 		mainController = loader.getController();

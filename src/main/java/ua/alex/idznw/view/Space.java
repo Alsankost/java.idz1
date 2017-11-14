@@ -11,6 +11,7 @@ import javafx.scene.input.Dragboard;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.Pane;
+import javafx.scene.control.ScrollPane;
 import ua.alex.idznw.view.model.ComponentsSet;
 import ua.alex.idznw.view.model.SelectionModel;
 
@@ -19,7 +20,7 @@ public class Space extends Pane {
 	
 	private boolean componentFocusFlag = false;
 
-	private static final EventHandler<DragEvent> dragOver = (e) -> {
+	public static final EventHandler<DragEvent> dragOver = (e) -> {
 		Dragboard db = ((DragEvent) e).getDragboard();
 		String name = db.getString();
 		if (name.length() == 0) return;
@@ -34,7 +35,7 @@ public class Space extends Pane {
         myTestButton.setEffect(dropShadow);*/
 	};	
 	
-	private static final EventHandler<DragEvent> dragExited = (e) -> {
+	public static final EventHandler<DragEvent> dragExited = (e) -> {
 		Dragboard db = ((DragEvent) e).getDragboard();
 		String name = db.getString();
 		if (name.length() == 0) return;
@@ -45,8 +46,8 @@ public class Space extends Pane {
         e.consume();
 	};	
 	
-	private static final EventHandler<DragEvent> dragDrop = (e) -> {
-		Space space = (Space) e.getSource();
+	public static final EventHandler<DragEvent> dragDrop = (e) -> {
+		Space space = (Space) ((ScrollPane) e.getSource()).getContent();
 		//added = bp.getCenter().getClass();
 		Dragboard db = ((DragEvent) e).getDragboard();
 		String name = db.getString();
@@ -100,10 +101,6 @@ public class Space extends Pane {
 	
 	public Space() {
 		super();
-		
-		this.setOnDragOver(dragOver);
-		this.setOnDragEntered(dragExited);
-		this.setOnDragDropped(dragDrop);
 		selectionModel = new SelectionModel(this);
 		
 		this.setOnMousePressed(thisPressListener);
@@ -168,7 +165,6 @@ public class Space extends Pane {
 				}
 			}
 		}
-		
 		return connections;
 	}
 	

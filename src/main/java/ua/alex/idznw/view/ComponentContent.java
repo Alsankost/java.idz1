@@ -28,4 +28,8 @@ public abstract class ComponentContent extends Pane {
 	public abstract MenuItem[] getMenuItems();
 	
 	public abstract void update(UpdateType updateType, Object... data);
+	
+	public abstract void setData(String... data);
+	
+	public abstract String[] getData();
 }

@@ -17,6 +17,8 @@ public class ConnectionView extends Line {
 		this.firstPoint = fp;
 		this.secondPoint = sp;
 		
+		System.out.println(fp + " " + sp);
+		
 		this.startXProperty().bind(this.firstPoint.layoutXProperty().add(this.firstPoint.widthProperty().divide(2)));
 		this.startYProperty().bind(this.firstPoint.layoutYProperty().add(this.firstPoint.heightProperty().divide(2)));
 		this.endXProperty().bind(this.secondPoint.layoutXProperty().add(this.secondPoint.widthProperty().divide(2)));

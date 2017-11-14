@@ -39,6 +39,7 @@ public abstract class ComponentsSet {
 	public static ComponentContent createContent(String name) {
 		ComponentContent result = null;
 		try {
+			//System.out.println("New component: " + name);
 			result = (ComponentContent) collection.get(name).newInstance();
 		} catch (InstantiationException e) {
 			// TODO Auto-generated catch block
