@@ -152,17 +152,16 @@ public class ComponentView extends Pane {
 		
 		System.out.println("--kkk-- " + name);
 		
+		ComponentView first = space.getSelectionModel().getOne();
+		if (first == null) return;
+		
 		switch (name) {
 			case "..":
-				ComponentView first = space.getSelectionModel().getOne();
-				if (first != null && !first.equals(second)) {
-					ConnectionView connection = new ConnectionView(first, second);
-					space.getChildren().add(connection);
-					connection.toBack();
-				}
+				space.connect(first, second);
 			break;
 			
 			case "-.":
+				space.disconnect(first, second);
 			break;
 		}	
 		//System.out.println(((ComponentView) e.getSource()).getContent());
@@ -269,7 +268,9 @@ public class ComponentView extends Pane {
 	}
 	
 	public void suicide() {
+		Space space = (Space) this.getParent();
+		space.disconnectComponent(this);
 		content.update(UpdateType.KILL);
-		((Space) this.getParent()).getChildren().remove(this);
+		space.getChildren().remove(this);
 	}
 }

@@ -1,5 +1,8 @@
 package ua.alex.idznw.view;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javafx.collections.ListChangeListener;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
@@ -123,4 +126,56 @@ public class Space extends Pane {
 		
 		});
 	}
-}
+	
+	public ConnectionView getConnection(ComponentView c1, ComponentView c2) {
+		for (Node item : this.getChildren()) {
+			if (item instanceof ConnectionView) {
+				ConnectionView temp = (ConnectionView) item;
+				if ((temp.getFirstPoint().equals(c1) && temp.getSecondPoint().equals(c2)) ||
+					(temp.getFirstPoint().equals(c2) && temp.getSecondPoint().equals(c1))) {
+					return temp;
+				}
+			}
+		}
+		return null;
+	}
+	
+	public boolean connect(ComponentView first, ComponentView second) {
+		if (first.equals(second) || getConnection(first, second) != null) return false;
+		
+		ConnectionView connection = new ConnectionView(first, second);
+		this.getChildren().add(connection);
+		connection.toBack();
+		return true;
+	}
+	
+	public boolean disconnect(ComponentView first, ComponentView second) {
+		if (first.equals(second)) return false;
+		ConnectionView temp = getConnection(first, second);
+		if (temp == null) return false;
+		this.getChildren().remove(temp);
+		return true;
+	}
+	
+	public List<ConnectionView> getConnectionsFromComponent(ComponentView component) {
+		List<ConnectionView> connections = new ArrayList<ConnectionView>();
+		
+		for (Node item : this.getChildren()) {
+			if (item instanceof ConnectionView) {
+				ConnectionView temp = (ConnectionView) item;
+				if ((temp.getFirstPoint().equals(component) || temp.getSecondPoint().equals(component))) {
+					connections.add(temp);
+				}
+			}
+		}
+		
+		return connections;
+	}
+	
+	public void disconnectComponent(ComponentView component) {
+		List<ConnectionView> connections = getConnectionsFromComponent(component);
+		if (connections.size() == 0) return;
+		//Warning!
+		this.getChildren().removeAll(connections);
+	}
+ }

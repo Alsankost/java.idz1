@@ -135,6 +135,9 @@ public class SelectionModel {
 	}
 
 	public ComponentView getOne() {
+		if (selectionList.size() == 0) {
+			return null;
+		}
 		return selectionList.get(0);
 	}
 	
